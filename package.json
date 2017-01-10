@@ -1,0 +1,15 @@
+{
+  "name": "prototypeproject",
+  "version": "1.0.0",
+  "description": "This is prototype project using node - rabbitmq",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "delfrinando@tiket.com",
+  "license": "ISC",
+  "dependencies": {
+    "amqp": "^0.2.6",
+    "express": "^4.14.0"
+  }
+}

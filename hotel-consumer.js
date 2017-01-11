@@ -18,26 +18,21 @@ amqp.connect('amqp://52.78.200.172', function(err, conn) {
     ch.prefetch(1);
     console.log(' [x] Awaiting RPC requests');
     ch.consume(q, function reply(msg) {
-
+      const startp = new Date().getTime();
       client.get(msg.content.toString(), function(err, reply) {
-        console.log('Message replied ' + msg.properties.replyTo);
-
         if (reply === null){
           request(baseurl + msg.content.toString() + endurl, function (error, response, body) {
-              ch.sendToQueue(msg.properties.replyTo,
-              new Buffer(body),
-              {correlationId: msg.properties.correlationId});
+              ch.sendToQueue(msg.properties.replyTo, new Buffer(body), {correlationId: msg.properties.correlationId});
               ch.ack(msg);
-
               client.set(msg.content.toString(), body, function(err, reply) {
-            
               });
-            });
-          
+            });          
         } else{
           ch.sendToQueue(msg.properties.replyTo, new Buffer(reply), {correlationId: msg.properties.correlationId});
           ch.ack(msg);
         }
+        const datime = new Date().getTime() - startp;       
+        console.log( datime + 'ms. Message replied to ' + msg.properties.replyTo);
       });     
 
       

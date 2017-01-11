@@ -9,9 +9,10 @@ const app = express();
 
 app.get('/', function(req, res) {
   //const startp = microtime.now();
-  const startp = new Date().getTime();
+  // const startp = new Date().getTime();
   amqp.connect('amqp://localhost', function(err, conn) {
-    conn.createChannel(function(err, ch) {
+    conn.createChannel(function(err, ch) {      
+      const startp = new Date().getTime();
       const parsedUrl = url.parse(req.url, true);
       const queryAsObject = parsedUrl.query;      
       

@@ -4,11 +4,12 @@ const url = require("url");
 const express = require('express');
 const app = express();
 
-const microtime = require('microtime')
+//const microtime = require('microtime')
 
 
 app.get('/', function(req, res) {
-  const startp = microtime.now();
+  //const startp = microtime.now();
+  const startp = new Date().getTime();
   amqp.connect('amqp://52.78.200.172', function(err, conn) {
     conn.createChannel(function(err, ch) {
       const parsedUrl = url.parse(req.url, true);
@@ -20,7 +21,8 @@ app.get('/', function(req, res) {
         console.log(' [x] Sending Message');   
         ch.sendToQueue('queue_send', new Buffer(req.url),{ correlationId: corr, replyTo: q.queue });
         ch.consume(q.queue, function (msg) {
-          const datime = startp - microtime.now();
+          //const datime = startp - microtime.now();
+          const datime = new Date().getTime() - startp;
           console.log( datime + 'ms [.] Got message! ' + q.queue);
           res.end(msg.content.toString());
           ch.ack(msg);

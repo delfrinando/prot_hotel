@@ -26,8 +26,7 @@ amqp.connect('amqp://localhost', function(err, conn) {
               ch.ack(msg);
               client.set(msg.content.toString(), body, function(err, reply) {
               });
-            });
-          
+            });          
         } else{
           ch.sendToQueue(msg.properties.replyTo, new Buffer(reply), {correlationId: msg.properties.correlationId});
           ch.ack(msg);

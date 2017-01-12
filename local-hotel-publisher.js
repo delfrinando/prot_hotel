@@ -20,6 +20,7 @@ app.get('/', function(req, res) {
           const datime = new Date().getTime() - startp;
           console.log('[.] Got message! in ' + datime);
           res.end(msg.content.toString());
+          
           ch.ack(msg, function(){            
             ch.close(function(err, conn){
               conn.close();

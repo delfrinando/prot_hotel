@@ -22,7 +22,7 @@ if (cluster.isMaster) {
 		console.log('connected');
 	});
 
-	amqp.connect('amqp://localhost', function(err, conn) {
+	amqp.connect('amqp://52.78.200.172', function(err, conn) {
 		conn.createChannel(function(err, ch) {
 			var q = 'queue_send';
 

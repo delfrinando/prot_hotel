@@ -35,8 +35,11 @@ if (cluster.isMaster) {
           const datime = new Date().getTime() - startp;
           console.log( datime + 'ms [.] Got message! ' + q.queue);
           res.end(msg.content.toString());
-          ch.ack(msg);
-          ch.close();
+          ch.ack(msg, function(){            
+            ch.close(function(err, conn){
+              conn.close();
+            });
+          });
         });
         });
       });

@@ -7,7 +7,7 @@ var redis = require('redis'),
 client = redis.createClient();
 
 client.on('connect', function() {
-    console.log('connected');
+  console.log('connected');
 });
 
 amqp.connect('amqp://52.78.200.172', function(err, conn) {
@@ -22,11 +22,11 @@ amqp.connect('amqp://52.78.200.172', function(err, conn) {
       client.get(msg.content.toString(), function(err, reply) {
         if (reply === null){
           request(baseurl + msg.content.toString() + endurl, function (error, response, body) {
-              ch.sendToQueue(msg.properties.replyTo, new Buffer(body), {correlationId: msg.properties.correlationId});
-              ch.ack(msg);
-              client.set(msg.content.toString(), body, function(err, reply) {
-              });
-            });          
+            ch.sendToQueue(msg.properties.replyTo, new Buffer(body), {correlationId: msg.properties.correlationId});
+            ch.ack(msg);
+            client.set(msg.content.toString(), body, function(err, reply) {
+            });
+          });          
         } else{
           ch.sendToQueue(msg.properties.replyTo, new Buffer(reply), {correlationId: msg.properties.correlationId});
           ch.ack(msg);

@@ -4,19 +4,13 @@ const url = require("url");
 const express = require('express');
 const app = express();
 
-//const microtime = require('microtime')
-
-
 app.get('/', function(req, res) {
-  //const startp = microtime.now();
-  // const startp = new Date().getTime();
   amqp.connect('amqp://52.78.200.172', function(err, conn) {
     conn.createChannel(function(err, ch) {
-      const startp = new Date().getTime();
       const parsedUrl = url.parse(req.url, true);
-      const queryAsObject = parsedUrl.query;      
-      
-      ch.assertQueue('', {exclusive: true, expires:1000, autodelete:true}, function(err, q) {
+      const queryAsObject = parsedUrl.query;            
+      ch.assertQueue('', {exclusive: true, expires:1000, autodelete:true}, function(err, q) {        
+        const startp = new Date().getTime();
         const corr = uuid();
         
         console.log('[x] Sending Message');   

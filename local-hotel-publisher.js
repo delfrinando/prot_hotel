@@ -6,21 +6,20 @@ const app = express();
 // const startp = new Date().getTime();
 
 app.get('/', function(req, res) {
-  const startp = new Date().getTime();
   amqp.connect('amqp://localhost', function(err, conn) {
     conn.createChannel(function(err, ch) {      
       const parsedUrl = url.parse(req.url, true);
-      const queryAsObject = parsedUrl.query;            
-      ch.assertQueue('', {exclusive: true, expires:1000, autodelete:true}, function(err, q) {   
+      const queryAsObject = parsedUrl.query;  
+      ch.assertQueue('', {exclusive: true}, function(err, q) {
         const corr = uuid();
-        
-        console.log('[x] Sending Message');   
+        const startp = new Date().getTime();        
+        console.log('[x] Sending Message at ' + startp);   
         ch.sendToQueue('queue_send', new Buffer(req.url),{ correlationId: corr, replyTo: q.queue }); 
         ch.consume(q.queue, function (msg) {
           const datime = new Date().getTime() - startp;
           console.log('[.] Got message! in ' + datime);
           res.end(msg.content.toString());
-          
+
           ch.ack(msg, function(){            
             ch.close(function(err, conn){
               conn.close();

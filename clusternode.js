@@ -36,18 +36,28 @@ if (cluster.isMaster) {
 						request(baseurl + msg.content.toString() + endurl, function (error, response, body) {
 							ch.sendToQueue(msg.properties.replyTo, new Buffer(body), {correlationId: msg.properties.correlationId});
 							ch.ack(msg);
+
+							const datime = new Date().getTime() - startp;       
+							console.log( datime + 'ms. Message replied to ' + msg.properties.replyTo);
 							client.set(msg.content.toString(), body, function(err, reply) {
 							});
 						});          
 					} else{
 						ch.sendToQueue(msg.properties.replyTo, new Buffer(reply), {correlationId: msg.properties.correlationId});
 						ch.ack(msg);
+						
+						// ch.ack(msg, function(){            
+						// 	ch.close(function(err, conn){
+						// 		conn.close();
+						// 	});
+						// });
+
+						const datime = new Date().getTime() - startp;       
+						console.log( datime + 'ms. Message replied to ' + msg.properties.replyTo);
 					}
-					const datime = new Date().getTime() - startp;       
-					console.log( datime + 'ms. Message replied to ' + msg.properties.replyTo);
 				});     
 
-				
+
 			});
 		});
 	});
